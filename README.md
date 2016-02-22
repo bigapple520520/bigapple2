@@ -7,6 +7,7 @@ Bigapple
 
 ##如果你是用Android Studio工具开发，可以这样依赖：
 、
+
 dependencies {
     compile 'com.xuan:bigapplelib:2.0.0'
 }
