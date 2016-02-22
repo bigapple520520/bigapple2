@@ -5,6 +5,11 @@ Bigapple
 
 这个框架主要分为以下几部分，这里大致做一个介绍，具体使用可以查看我的wiki
 
+##如果你是用Android Studio工具开发，可以这样依赖：
+dependencies {
+    compile 'com.xuan:bigapplelib:2.0.0'
+}
+
 ##IOC注解注入
 ioc部分主要使用注解，@InjectView。主要用来注入View对象。以免重复调用findViewByView这个方法。使代码更加整洁。
 
