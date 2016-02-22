@@ -26,8 +26,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
 }
-def siteUrl = 'https://github.com/bigapple520520/bigapple'
-def gitUrl = 'https://github.com/bigapple520520/bigapple.git'
+def siteUrl = 'https://github.com/bigapple520520/bigapple2'
+def gitUrl = 'https://github.com/bigapple520520/bigapple2.git'
 group = "com.xuan"
 
 install {
