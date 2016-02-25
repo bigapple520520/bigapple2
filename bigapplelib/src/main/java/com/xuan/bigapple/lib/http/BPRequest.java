@@ -1,15 +1,12 @@
 package com.xuan.bigapple.lib.http;
 
+import com.xuan.bigapple.lib.http.callback.BPHttpDownloadListener;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.xuan.bigapple.lib.http.helper.FileWraper;
 
 /**
  * 请求对象
@@ -17,17 +14,80 @@ import com.xuan.bigapple.lib.http.helper.FileWraper;
  * @author xuan
  */
 public class BPRequest {
+	/** 请求地址 */
+	private String mUrl;
+
 	/** 普通参数 */
 	private Map<String, String> mParamMap;
 	/** 文件参数 */
-	private Map<String, FileWraper> mFileParamMap;
+	private Map<String, File> mFileParamMap;
 	/** 头部参数 */
 	private Map<String, String> mHeaderMap;
-	/** 已请求体Json方式提交 */
+	/** 用请求体Json方式提交 */
 	private String mBodyJson;
+
+	/** 提交|获取的编码方式 */
+	private String mEncode = "utf-8";
+	/** 连接超时 */
+	private int mConnectionTimeout = 1000*30;
+	/** 读取超时 */
+	private int mReadTimeout = 1000*30;
+
+	/** 结果返回回调,只有下载文件时会被调用 */
+	private BPHttpDownloadListener mDownloadListener;
+	/** 下载时文件存放路径 */
+	private String mDownloadFileName;
 
 	public BPRequest() {
 		init();
+	}
+
+	public int getConnectionTimeout() {
+		return mConnectionTimeout;
+	}
+
+	public void setConnectionTimeout(int connectionTimeout) {
+		this.mConnectionTimeout = connectionTimeout;
+	}
+
+	public String getDownloadFileName() {
+		return mDownloadFileName;
+	}
+
+	public void setDownloadFileName(String downloadFileName) {
+		this.mDownloadFileName = downloadFileName;
+	}
+
+	public String getEncode() {
+		return mEncode;
+	}
+
+	public void setEncode(String encode) {
+		this.mEncode = encode;
+	}
+
+	public int getReadTimeout() {
+		return mReadTimeout;
+	}
+
+	public void setReadTimeout(int readTimeout) {
+		this.mReadTimeout = readTimeout;
+	}
+
+	public BPHttpDownloadListener getDownloadListener() {
+		return mDownloadListener;
+	}
+
+	public void setDownloadListener(BPHttpDownloadListener downloadListener) {
+		this.mDownloadListener = downloadListener;
+	}
+
+	public String getUrl() {
+		return mUrl;
+	}
+
+	public void setUrl(String url) {
+		this.mUrl = url;
 	}
 
 	/**
@@ -58,47 +118,9 @@ public class BPRequest {
 	 * 
 	 * @param key
 	 * @param file
-	 * @throws FileNotFoundException
 	 */
-	public void putFile(String key, File file) throws FileNotFoundException {
-		putFile(key, new FileInputStream(file), file.getName());
-	}
-
-	/**
-	 * 添加文件流
-	 * 
-	 * @param key
-	 * @param stream
-	 */
-	public void putFile(String key, InputStream stream) {
-		putFile(key, stream, null);
-	}
-
-	/**
-	 * 添加文件流
-	 * 
-	 * @param key
-	 * @param stream
-	 * @param fileName
-	 */
-	public void putFile(String key, InputStream stream, String fileName) {
-		putFile(key, stream, fileName, null);
-	}
-
-	/**
-	 * 添加文件流
-	 * 
-	 * @param key
-	 * @param stream
-	 * @param fileName
-	 * @param contentType
-	 */
-	public void putFile(String key, InputStream stream, String fileName,
-			String contentType) {
-		if (key != null && stream != null) {
-			mFileParamMap.put(key,
-					new FileWraper(stream, fileName, contentType));
-		}
+	public void putFile(String key, File file) {
+		mFileParamMap.put(key, file);
 	}
 
 	/**
@@ -139,11 +161,11 @@ public class BPRequest {
 	}
 
 	/**
-	 * 获取GET参数串
-	 * 
+	 * 参数以a=b&c=d类似这种格式返回
+	 *
 	 * @return
 	 */
-	public String getGetParamsUrl() {
+	public String getParamsStr(){
 		StringBuilder sb = new StringBuilder();
 		for (Entry<String, String> entry : mParamMap.entrySet()) {
 			sb.append(entry.getKey()).append("=")
@@ -153,15 +175,27 @@ public class BPRequest {
 		if (sb.length() > 0) {
 			sb.deleteCharAt(sb.length() - 1);
 		}
-
 		return sb.toString();
+	}
+
+	/**
+	 * 获取GET参数串
+	 * 
+	 * @return
+	 */
+	public String getGetUrl() {
+		if(!getUrl().contains("?")){
+			return getUrl() + "?" + getParamsStr();
+		}else{
+			return getUrl() + "&" + getParamsStr();
+		}
 	}
 
 	public Map<String, String> getParamMap() {
 		return mParamMap;
 	}
 
-	public Map<String, FileWraper> getFileParamMap() {
+	public Map<String, File> getFileParamMap() {
 		return mFileParamMap;
 	}
 
@@ -176,7 +210,7 @@ public class BPRequest {
 	// 初始化MAP
 	private void init() {
 		mParamMap = new ConcurrentHashMap<String, String>();
-		mFileParamMap = new ConcurrentHashMap<String, FileWraper>();
+		mFileParamMap = new ConcurrentHashMap<String, File>();
 		mHeaderMap = new ConcurrentHashMap<String, String>();
 	}
 
@@ -194,7 +228,7 @@ public class BPRequest {
 			result.append(entry.getValue());
 		}
 
-		for (ConcurrentHashMap.Entry<String, FileWraper> entry : mFileParamMap
+		for (ConcurrentHashMap.Entry<String, File> entry : mFileParamMap
 				.entrySet()) {
 			if (result.length() > 0) {
 				result.append("&");
@@ -205,7 +239,11 @@ public class BPRequest {
 			result.append("FILE");
 		}
 
-		return result.toString();
+		if(!getUrl().contains("?")){
+			return getUrl() + "?" + result.toString();
+		}else{
+			return getUrl() + "&" + result.toString();
+		}
 	}
 
 }

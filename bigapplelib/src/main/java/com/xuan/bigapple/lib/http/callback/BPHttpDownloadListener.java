@@ -1,11 +1,11 @@
 package com.xuan.bigapple.lib.http.callback;
 
 /**
- * 读取HTTP数据时的回调
+ * 下载监听
  * 
  * @author xuan
  */
-public interface ResultHandlerCallback {
+public interface BPHttpDownloadListener {
 	/**
 	 * 处理结果时回调
 	 * 

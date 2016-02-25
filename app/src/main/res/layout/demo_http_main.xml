@@ -11,20 +11,27 @@
             android:id="@+id/getBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Get:www.baidu.com"/>
+            android:text="Get请求"/>
         <Button 
             android:id="@+id/postBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Post:www.baidu.com"/>
+            android:text="Post请求"/>
         <Button 
-            android:id="@+id/downloadBtn"
+            android:id="@+id/getDownloadBtn"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Get请求下载"/>
+        <Button
+            android:id="@+id/postDownloadBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Post请求下载"/>
         <Button 
             android:id="@+id/uploadBtn"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="Upload文件上传"/>
         <TextView 
             android:id="@+id/textView"
             android:layout_width="fill_parent"

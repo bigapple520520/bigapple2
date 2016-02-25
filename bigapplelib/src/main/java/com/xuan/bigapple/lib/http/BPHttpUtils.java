@@ -1,13 +1,11 @@
 package com.xuan.bigapple.lib.http;
 
-import com.xuan.bigapple.lib.http.callback.ResultHandlerCallback;
-import com.xuan.bigapple.lib.http.helper.BPHttpConfig;
-import com.xuan.bigapple.lib.utils.Validators;
-import com.xuan.bigapple.lib.utils.log.LogUtils;
+import android.util.Log;
+
+import com.xuan.bigapple.lib.http.callback.BPHttpDownloadListener;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * HTTP工具类，后期可以有多种实现方式
@@ -15,79 +13,77 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author xuan
  */
 public abstract class BPHttpUtils {
+	private static final String TAG = "Bigapple.BPHttpUtils";
+	public static final boolean DEBUG = true;
 
 	/**
-	 * post json提交
-	 * 
-	 * @param url
+	 * POST请求,json提交
+	 *
 	 * @param request
-	 * @param config
 	 * @return
-	 * @throws Exception
 	 */
-	public static BPResponse postJson(String url, BPRequest request,
-			BPHttpConfig config) throws Exception {
-		if (Validators.isEmpty(url)) {
-			new BPResponse(-1, "Url is empty.");
-		}
-
-		return null;
+	public static BPResponse postJson(BPRequest request) {
+		BPHttpClient client = BPHttpFactroy.getURLConnectionHttpClient();
+		printLog(request);
+		return client.postJson(request);
 	}
 
 	/**
-	 * post提交
-	 * 
+	 * POST请求,json提交
+	 *
 	 * @param url
-	 * @param request
-	 * @param config
+	 * @param bodyJson
 	 * @return
-	 * @throws Exception
 	 */
-	public static BPResponse post(String url, BPRequest request,
-			BPHttpConfig config) throws Exception {
-		if (Validators.isEmpty(url)) {
-			new BPResponse(-1, "Url is empty.");
-		}
-
-		return null;
+	public static BPResponse postJson(String url, String bodyJson) {
+		BPRequest request = new BPRequest();
+		request.setUrl(url);
+		request.putBodyJson(bodyJson);
+		return postJson(request);
 	}
 
 	/**
-	 * POST请求
+	 * POST请求,普通参数方式提交
+	 *
+	 * @param request
+	 * @return
+	 */
+	public static BPResponse post(BPRequest request) {
+		BPHttpClient client = BPHttpFactroy.getURLConnectionHttpClient();
+		printLog(request);
+		return client.post(request);
+	}
+
+	/**
+	 * POST请求,普通参数方式提交
 	 * 
 	 * @param url
 	 * @param paramsMap
 	 * @return
 	 */
-	public static BPResponse post(String url, Map<String, String> paramsMap)
-			throws Exception {
-		if (Validators.isEmpty(url)) {
-			new BPResponse(-1, "Url is empty.");
+	public static BPResponse post(String url, Map<String, String> paramsMap) {
+		BPRequest request = new BPRequest();
+		request.setUrl(url);
+
+		if(null != paramsMap){
+			for(Map.Entry<String,String> entry : paramsMap.entrySet()){
+				request.putParam(entry.getKey(), entry.getValue());
+			}
 		}
 
-		if (null == paramsMap) {
-			paramsMap = new ConcurrentHashMap<String, String>();
-		}
-
-		return null;
+		return post(request);
 	}
 
 	/**
-	 * get请求
-	 * 
-	 * @param url
+	 * GET请求
+	 *
 	 * @param request
-	 * @param config
 	 * @return
-	 * @throws Exception
 	 */
-	public static BPResponse get(String url, BPRequest request,
-			BPHttpConfig config) throws Exception {
-		if (Validators.isEmpty(url)) {
-			new BPResponse(-1, "Url is empty.");
-		}
-
-		return null;
+	public static BPResponse get(BPRequest request) {
+		BPHttpClient client = BPHttpFactroy.getURLConnectionHttpClient();
+		printLog(request);
+		return client.get(request);
 	}
 
 	/**
@@ -97,90 +93,140 @@ public abstract class BPHttpUtils {
 	 * @param paramsMap
 	 * @return
 	 */
-	public static BPResponse get(String url, Map<String, String> paramsMap)
-			throws Exception {
-		if (Validators.isEmpty(url)) {
-			new BPResponse(-1, "Url is empty.");
+	public static BPResponse get(String url, Map<String, String> paramsMap) {
+		BPRequest request = new BPRequest();
+		request.setUrl(url);
+
+		if(null != paramsMap){
+			for(Map.Entry<String,String> entry : paramsMap.entrySet()){
+				request.putParam(entry.getKey(), entry.getValue());
+			}
 		}
 
-		if (null == paramsMap) {
-			paramsMap = new ConcurrentHashMap<String, String>();
-		}
+		return get(request);
+	}
 
-		return null;
+	/**
+	 * 上传文件
+	 *
+	 * @param request
+	 * @return
+	 */
+	public static BPResponse upload(BPRequest request){
+		BPHttpClient client = BPHttpFactroy.getURLConnectionHttpClient();
+		printLog(request);
+		return client.upload(request);
 	}
 
 	/**
 	 * 上传文件
 	 * 
 	 * @param url
-	 * @param fileNameMap
-	 * @param paramsMap
+	 * @param fileMap
+	 * @param paramMap
 	 * @return
 	 */
 	public static BPResponse upload(String url,
-			Map<String, String> fileNameMap, Map<String, String> paramsMap)
-			throws Exception {
-		if (Validators.isEmpty(url)) {
-			new BPResponse(-1, "Url is empty.");
+			Map<String, File> fileMap, Map<String, String> paramMap) {
+		BPRequest request = new BPRequest();
+		request.setUrl(url);
+		if(null != fileMap){
+			for(Map.Entry<String, File> entry : fileMap.entrySet()){
+				request.putFile(entry.getKey(), entry.getValue());
+			}
+		}
+		if(null != paramMap){
+			for(Map.Entry<String, String> entry : paramMap.entrySet()){
+				request.putParam(entry.getKey(), entry.getValue());
+			}
 		}
 
-		if (null == paramsMap) {
-			paramsMap = new ConcurrentHashMap<String, String>();
-		}
-
-		if (null == fileNameMap) {
-			fileNameMap = new ConcurrentHashMap<String, String>();
-		}
-
-		return null;
+		return upload(request);
 	}
 
 	/**
-	 * 下载到文件
-	 * 
-	 * @param downloadUrl
-	 *            下载地址
+	 * GET的方式下载
+	 *
+	 * @param bpRequest
+	 * @return
+	 */
+	public static BPResponse getDowload(BPRequest bpRequest){
+		BPHttpClient client = BPHttpFactroy.getURLConnectionHttpClient();
+		printLog(bpRequest);
+		return client.getDowload(bpRequest);
+	}
+
+	/**
+	 * GET的方式下载
+	 *
+	 * @param url
 	 * @param paramsMap
-	 *            get参数
 	 * @param saveFileName
-	 *            文件保存地址
-	 * @param resultHandlerCallback
-	 *            下载回调
+	 * @param downloadListener
 	 * @return
 	 * @throws Exception
 	 */
-	public static BPResponse dowloadFile(String downloadUrl,
+	public static BPResponse getDowload(String url,
 			Map<String, String> paramsMap, String saveFileName,
-			ResultHandlerCallback resultHandlerCallback) throws Exception {
-		if (Validators.isEmpty(downloadUrl)) {
-			new BPResponse(-1, "DownloadUrl is empty.");
-		}
+			BPHttpDownloadListener downloadListener) throws Exception {
 
-		if (null == paramsMap) {
-			paramsMap = new ConcurrentHashMap<String, String>();
-		}
-
-		return null;
-	}
-
-	/** 设置参数 */
-	private static void setParams(BPRequest bpRequest,
-			Map<String, String> paramsMap) {
-		for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
-			bpRequest.putParam(entry.getKey(), entry.getValue());
-		}
-	}
-
-	/** 设置文件参数 */
-	private static void setFileParams(BPRequest bpRequest,
-			Map<String, String> paramsMap) {
-		for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
-			try {
-				bpRequest.putFile(entry.getKey(), new File(entry.getValue()));
-			} catch (Exception e) {
-				LogUtils.e(e.getMessage(), e);
+		BPRequest request = new BPRequest();
+		request.setUrl(url);
+		request.setDownloadFileName(saveFileName);
+		request.setDownloadListener(downloadListener);
+		if(null != paramsMap){
+			for(Map.Entry<String,String> entry : paramsMap.entrySet()){
+				request.putParam(entry.getKey(), entry.getValue());
 			}
+		}
+
+		printLog(request);
+		return getDowload(request);
+	}
+
+	/**
+	 * POST的方式下载
+	 *
+	 * @param bpRequest
+	 * @return
+	 */
+	public static BPResponse postDowload(BPRequest bpRequest){
+		BPHttpClient client = BPHttpFactroy.getURLConnectionHttpClient();
+		printLog(bpRequest);
+		return client.postDowload(bpRequest);
+	}
+
+	/**
+	 * POST的方式下载
+	 *
+	 * @param url
+	 * @param paramsMap
+	 * @param saveFileName
+	 * @param downloadListener
+	 * @return
+	 * @throws Exception
+	 */
+	public static BPResponse postDowload(String url,
+										Map<String, String> paramsMap, String saveFileName,
+										BPHttpDownloadListener downloadListener) throws Exception {
+
+		BPRequest request = new BPRequest();
+		request.setUrl(url);
+		request.setDownloadFileName(saveFileName);
+		request.setDownloadListener(downloadListener);
+		if(null != paramsMap){
+			for(Map.Entry<String,String> entry : paramsMap.entrySet()){
+				request.putParam(entry.getKey(), entry.getValue());
+			}
+		}
+
+		printLog(request);
+		return postDowload(request);
+	}
+
+	private static void printLog(BPRequest request){
+		if(DEBUG){
+			Log.d(TAG, request.toString());
 		}
 	}
 

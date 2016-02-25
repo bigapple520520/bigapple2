@@ -1,7 +1,5 @@
 package com.xuan.bigapple.lib.http;
 
-import com.xuan.bigapple.lib.http.helper.BPHttpConfig;
-
 /**
  * HTT访问通用接口
  * 
@@ -11,45 +9,49 @@ public interface BPHttpClient {
 	/**
 	 * POST请求，Json放到请求体里面
 	 * 
-	 * @param url
 	 * @param bpRequest
-	 * @param httConfig
 	 * @return
 	 */
-	BPResponse postJson(String url, BPRequest bpRequest, BPHttpConfig httConfig)
-			throws Exception;
+	BPResponse postJson(BPRequest bpRequest);
 
 	/**
 	 * POST请求，普通参数的方式提交
 	 * 
-	 * @param url
 	 * @param bpRequest
-	 * @param httConfig
 	 * @return
 	 */
-	BPResponse post(String url, BPRequest bpRequest, BPHttpConfig httConfig)
-			throws Exception;
+	BPResponse post(BPRequest bpRequest);
 
 	/**
 	 * GET请求
 	 * 
-	 * @param url
 	 * @param bpRequest
 	 * @return
 	 */
-	BPResponse get(String url, BPRequest bpRequest, BPHttpConfig httConfig)
-			throws Exception;
+	BPResponse get(BPRequest bpRequest);
 
 	/**
-	 * 下载，用的是get请求
+	 * 下载，用的是GET请求
 	 *
-	 * @param url
 	 * @param bpRequest
-	 * @param httConfig
 	 * @return
-	 * @throws Exception
 	 */
-	BPResponse dowload(String url, BPRequest bpRequest, BPHttpConfig httConfig)
-			throws Exception;
+	BPResponse getDowload(BPRequest bpRequest);
+
+	/**
+	 * 下载，用的是POST请求
+	 *
+	 * @param bpRequest
+	 * @return
+	 */
+	BPResponse postDowload(BPRequest bpRequest);
+
+	/**
+	 * 模拟表单上传文件
+	 *
+	 * @param bpRequest
+	 * @return
+	 */
+	BPResponse upload(BPRequest bpRequest);
 
 }
