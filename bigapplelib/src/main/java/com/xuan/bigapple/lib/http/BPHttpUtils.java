@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public abstract class BPHttpUtils {
 	private static final String TAG = "Bigapple.BPHttpUtils";
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	/**
 	 * POST请求,json提交

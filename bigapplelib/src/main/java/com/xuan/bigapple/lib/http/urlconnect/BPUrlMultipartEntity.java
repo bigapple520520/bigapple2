@@ -55,7 +55,9 @@ public class BPUrlMultipartEntity {
 
         OutputStream os = connection.getOutputStream();
 
-        try (Writer writer = new OutputStreamWriter(os)) {
+        Writer writer = null;
+        try {
+            writer = new OutputStreamWriter(os);
             for (Map.Entry<String, String> entry : request.getParamMap().entrySet()) {
                 // Write the start of our request
                 writer.write(boundary);
@@ -91,7 +93,9 @@ public class BPUrlMultipartEntity {
 
                 writer.flush();
 
-                try (InputStream input = new FileInputStream(entry.getValue())) {
+                InputStream input = null;
+                try {
+                    input = new FileInputStream(entry.getValue());
                     byte[] buffer = new byte[1024];
                     while (true) {
                         int read = input.read(buffer, 0, buffer.length);
@@ -101,6 +105,14 @@ public class BPUrlMultipartEntity {
                         os.write(buffer, 0, read);
                     }
                     os.flush();
+                }catch (Exception e){
+                    throw new Exception(e);
+                }finally {
+                    try {
+                        input.close();
+                    }catch (Exception e){
+                        //Ignore
+                    }
                 }
 
                 writer.write(CLRF);
@@ -112,6 +124,14 @@ public class BPUrlMultipartEntity {
             writer.write(boundary);
             // Write a final newline
             writer.write(CLRF);
+        }catch (Exception e){
+            throw new Exception(e);
+        }finally {
+            try {
+                writer.close();
+            }catch (Exception e){
+                //Ignore
+            }
         }
     }
 
