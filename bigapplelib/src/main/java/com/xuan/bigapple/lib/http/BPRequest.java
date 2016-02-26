@@ -161,7 +161,7 @@ public class BPRequest {
 	}
 
 	/**
-	 * 参数以a=b&c=d类似这种格式返回
+	 * 返回参数的拼接
 	 *
 	 * @return
 	 */
