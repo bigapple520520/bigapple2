@@ -1,9 +1,5 @@
 package com.xuan.bigapple.lib.bitmap;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.text.TextUtils;
@@ -15,6 +11,10 @@ import com.xuan.bigapple.lib.bitmap.listeners.DownloaderListener;
 import com.xuan.bigapple.lib.bitmap.listeners.MakeCacheKeyListener;
 import com.xuan.bigapple.lib.bitmap.listeners.impl.DefaultDownloaderListener;
 import com.xuan.bigapple.lib.bitmap.listeners.impl.DefaultMakeCacheKeyListener;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * 图片加载的全局配置，包括了缓存管理等一些参数
@@ -82,7 +82,7 @@ public class BitmapGlobalConfig {
 	public String getDiskCachePath() {
 		if (TextUtils.isEmpty(diskCachePath)) {
 			diskCachePath = BitmapCommonUtils.getDiskCacheDir(application,
-					"anBitmapCache");
+					"BPBitmapCache");
 		}
 		return diskCachePath;
 	}

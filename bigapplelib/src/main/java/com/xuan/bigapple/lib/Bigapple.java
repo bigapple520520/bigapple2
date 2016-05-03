@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.xuan.bigapple.lib.bitmap.BPBitmapLoader;
 import com.xuan.bigapple.lib.utils.log.LogUtils;
 
 /**
@@ -33,7 +34,15 @@ public abstract class Bigapple {
 			application = context;
 		} else {
 			LogUtils.e("Bigapple can not be init. Cause context is wrong type.");
+			return;
 		}
+
+		Bigapple.initAssembly(application);
+	}
+
+	//初始化Bigapple其他组件
+	private static void initAssembly(Context application){
+		BPBitmapLoader.init(application);
 	}
 
 	/**

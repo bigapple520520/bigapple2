@@ -1,13 +1,13 @@
 package com.xuan.bigapple.lib.bitmap.core.utils;
 
-import java.io.File;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.StatFs;
 
 import com.xuan.bigapple.lib.utils.log.LogUtils;
+
+import java.io.File;
 
 /**
  * 通用图片工具类
@@ -58,6 +58,14 @@ public class BitmapCommonUtils {
 	 * @return
 	 */
 	public static long getAvailableSpace(File path) {
+		if(null == path || !path.isDirectory()){
+			return -1;
+		}
+
+		if(!path.exists()){
+			path.mkdirs();
+		}
+
 		try {
 			final StatFs stats = new StatFs(path.getPath());
 			return (long) stats.getBlockSize()

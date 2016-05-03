@@ -15,7 +15,7 @@ import com.xuan.bigapple.lib.cache.impl.ObjectMemoryCache;
  * @version $Revision: 1.0 $, $Date: 2013-9-17 下午8:46:35 $
  */
 public abstract class CacheUtils {
-	private static int objectCacheSize = 20;// 默认可放20个单位的缓存
+	private static int objectCacheSize = 50;// 默认可放50个单位的缓存
 	private static int bitmapCacheSize = 1024 * 1024 * 3;// 默认3M
 	private static float bitmapCachePercent = 0.3f;// 默认按照系统可以内存的0.3系数，所以会根据不同手机调整
 

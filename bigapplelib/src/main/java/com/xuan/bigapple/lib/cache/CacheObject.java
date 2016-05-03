@@ -7,9 +7,12 @@ package com.xuan.bigapple.lib.cache;
  * @version $Revision: 1.0 $, $Date: 2013-8-19 下午8:09:55 $
  */
 public class CacheObject<T> {
-	private volatile long creationTime;// 创建时间时长
-	private volatile long expiryTime = -1;// 过期时间，默认是永久
-	private T value;// 缓存对象
+	/**创建时间时长*/
+	private volatile long creationTime;
+	/**过期时间，默认-1是永久,单位:毫秒,例如:30天=30*24*60*60*1000*/
+	private volatile long expiryTime = -1;
+	/**缓存对象*/
+	private T value;
 
 	public CacheObject() {
 		initCreationTime();

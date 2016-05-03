@@ -29,8 +29,12 @@ public class BPBitmapLoader implements IBitmapLoader {
 			throw new NullPointerException("Application is null.");
 		}
 
-		instance = new BPBitmapLoader();
+		if(null != instance){
+			//保证初始化一次就好
+			return;
+		}
 
+		instance = new BPBitmapLoader();
 		NetBitmapLoader.init(application);
 		LocalBitmapLoader.init(application);
 	}
@@ -48,9 +52,9 @@ public class BPBitmapLoader implements IBitmapLoader {
 	 * @param config
 	 */
 	@Override
-	public void display(ImageView imageView, String url,
-			BitmapDisplayConfig config) {
+	public void display(ImageView imageView, String url, BitmapDisplayConfig config) {
 		if (Validators.isEmpty(url)) {
+			LogUtils.d("display url is empty.");
 			return;
 		}
 
