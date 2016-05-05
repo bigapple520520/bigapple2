@@ -15,5 +15,5 @@ public interface AsyncTaskFailCallback<T> {
 	 * @param result
 	 *            处理结果
 	 */
-	public void failCallback(Result<T> result);
+	void failCallback(Result<T> result);
 }

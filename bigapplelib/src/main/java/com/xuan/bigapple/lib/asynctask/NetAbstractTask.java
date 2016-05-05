@@ -8,7 +8,7 @@ import com.xuan.bigapple.lib.utils.ContextUtils;
 import com.xuan.bigapple.lib.utils.ToastUtils;
 
 /**
- * 在请求http前，会先判断网络是否存在
+ * 在请求http前，会先判断网络是否存在,还自带了HTTP工具类
  * 
  * @author xuan
  * @version $Revision: 1.0 $, $Date: 2014-5-20 下午3:12:25 $
@@ -41,5 +41,7 @@ public abstract class NetAbstractTask<T> extends AbstractTask<T> {
 	 * @return
 	 */
 	protected abstract Result<T> onHttpRequest(Object... params);
+
+
 
 }

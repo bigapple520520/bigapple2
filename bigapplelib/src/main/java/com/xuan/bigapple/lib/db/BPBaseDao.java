@@ -43,7 +43,7 @@ public class BPBaseDao {
     protected final static ReentrantLock lock = new ReentrantLock();// 保证多线程访问数据库的安全，性能有所损失
 
     /**
-     * 获取数据库，对应调用这个一次必须调用close关闭源
+     * 获取数据库操作实例，对应调用这个一次必须调用close关闭源
      *
      * @return
      */
@@ -424,48 +424,6 @@ public class BPBaseDao {
 
     // ----------------------------------利用反射操作数据API----------------------------------------------------------
 
-    /**
-     * 插入数据到数据库，支持批量插入
-     *
-     * @param tableName 数据库表名
-     * @param entitys   需要插入的数据对象
-     * @return
-     */
-    public long reflectInsert(String tableName, Object... entitys) {
-        if (Validators.isEmpty(tableName) || Validators.isEmpty(entitys)) {
-            return 0;
-        }
-
-        lock.lock();
-        SQLiteDatabase sqliteDatabase = null;
-        long insertCount = 0;
-        try {
-            sqliteDatabase = openSQLiteDatabase();
-            Set<String> columnSet = DbUtils.getTableAllColumns(sqliteDatabase,
-                    tableName);
-
-            sqliteDatabase.beginTransaction();
-            for (Object entity : entitys) {
-                ContentValues values = DbUtils.getWantToInsertValues(entity,
-                        columnSet);
-                insertCount = sqliteDatabase.insert(tableName, null, values);
-            }
-
-            sqliteDatabase.setTransactionSuccessful();
-        } catch (Exception e) {
-            LogUtils.e(e.getMessage(), e);
-        } finally {
-            if (null != sqliteDatabase) {
-                sqliteDatabase.endTransaction();
-            }
-
-            closeSQLiteDatabase();
-            lock.unlock();
-        }
-
-        return insertCount;
-    }
-
     // //////////////////////利用语法构造器来进行操作//////////////////////////////////
 
     /**
@@ -651,9 +609,9 @@ public class BPBaseDao {
     /**
      * Selector查询
      *
-     * @param selector
-     * @param clazz
-     * @param colume2FieldMapping
+     * @param selector 查询语句构造器
+     * @param clazz 接收数据的实体类
+     * @param colume2FieldMapping 实体类和数据库列名对应
      * @return
      */
     protected <T> List<T> bpQueryList(Selector selector, Class<T> clazz,
@@ -665,8 +623,8 @@ public class BPBaseDao {
     /**
      * Selector查询
      *
-     * @param selector
-     * @param clazz
+     * @param selector 查询语句构造器
+     * @param clazz 接收数据的实体类
      * @param colume2FieldMapping
      * @return
      */
@@ -679,10 +637,10 @@ public class BPBaseDao {
     /**
      * Selector查询
      *
-     * @param selector
-     * @param clazz
-     * @param colume2FieldMapping
-     * @param keyName
+     * @param selector 查询语句构造器
+     * @param clazz 接收数据的实体类
+     * @param colume2FieldMapping 实体类和数据库列名对应
+     * @param keyName 对应哪个列的值做key
      * @return
      */
     protected <K, T> Map<String, T> bpQueryMap(Selector selector,
@@ -690,6 +648,48 @@ public class BPBaseDao {
                                                String keyName) {
         return bpQuery(selector, new DefaultMapRowMapper<T>(keyName, clazz,
                 colume2FieldMapping));
+    }
+
+    /**
+     * 插入数据到数据库，支持批量插入
+     *
+     * @param tableName 数据库表名
+     * @param entitys   需要插入的数据对象
+     * @return
+     */
+    public long reflectInsert(String tableName, Object... entitys) {
+        if (Validators.isEmpty(tableName) || Validators.isEmpty(entitys)) {
+            return 0;
+        }
+
+        lock.lock();
+        SQLiteDatabase sqliteDatabase = null;
+        long insertCount = 0;
+        try {
+            sqliteDatabase = openSQLiteDatabase();
+            Set<String> columnSet = DbUtils.getTableAllColumns(sqliteDatabase,
+                    tableName);
+
+            sqliteDatabase.beginTransaction();
+            for (Object entity : entitys) {
+                ContentValues values = DbUtils.getWantToInsertValues(entity,
+                        columnSet);
+                insertCount = sqliteDatabase.insert(tableName, null, values);
+            }
+
+            sqliteDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            LogUtils.e(e.getMessage(), e);
+        } finally {
+            if (null != sqliteDatabase) {
+                sqliteDatabase.endTransaction();
+            }
+
+            closeSQLiteDatabase();
+            lock.unlock();
+        }
+
+        return insertCount;
     }
 
 }

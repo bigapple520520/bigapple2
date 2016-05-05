@@ -53,11 +53,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 初始化数据库，必须操作，默认数据名称是：bigapple
+     * 初始化数据库，必须操作，默认数据名称是：bigapple(不建议使用,必须设置自己的数据库名称)
      *
      * @param databaseVersion    数据库版本号
      * @param applicationContext Application实例
      */
+    @Deprecated
     public static void init(int databaseVersion, Context applicationContext) {
         DBHelper.databaseVersion = databaseVersion;
         instance = new DBHelper(applicationContext);

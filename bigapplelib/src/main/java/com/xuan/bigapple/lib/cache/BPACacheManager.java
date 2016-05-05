@@ -9,6 +9,7 @@ import com.xuan.bigapple.lib.cache.core.BPACache;
  * 
  * @author xuan
  */
+@Deprecated
 public class BPACacheManager {
 	private static BPACache defaultCache;
 

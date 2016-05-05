@@ -11,5 +11,5 @@ public interface AsyncTaskResultNullCallback {
 	/**
 	 * 回调
 	 */
-	public void resultNullCallback();
+	void resultNullCallback();
 }

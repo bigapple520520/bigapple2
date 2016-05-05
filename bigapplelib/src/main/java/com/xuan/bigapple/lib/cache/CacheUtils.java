@@ -14,6 +14,7 @@ import com.xuan.bigapple.lib.cache.impl.ObjectMemoryCache;
  * @author xuan
  * @version $Revision: 1.0 $, $Date: 2013-9-17 下午8:46:35 $
  */
+@Deprecated
 public abstract class CacheUtils {
 	private static int objectCacheSize = 50;// 默认可放50个单位的缓存
 	private static int bitmapCacheSize = 1024 * 1024 * 3;// 默认3M

@@ -22,15 +22,8 @@ public interface IBitmapLoader {
 	IBitmapLoader setDefaultBitmapGlobalConfig(BitmapGlobalConfig globalConfig);
 
 	/**
-	 * 获取默认显示配置
-	 * 
-	 * @return
-	 */
-	BitmapDisplayConfig getDefaultBitmapDisplayConfig();
-
-	/**
 	 * 获取默认全局配置
-	 * 
+	 *
 	 * @return
 	 */
 	BitmapGlobalConfig getDefaultBitmapGlobalConfig();
@@ -42,6 +35,13 @@ public interface IBitmapLoader {
 	 */
 	IBitmapLoader setDefaultBitmapDisplayConfig(
 			BitmapDisplayConfig displayConfig);
+
+	/**
+	 * 获取默认显示配置
+	 *
+	 * @return
+	 */
+	BitmapDisplayConfig getDefaultBitmapDisplayConfig();
 
 	/**
 	 * 显示图片
@@ -93,11 +93,13 @@ public interface IBitmapLoader {
 	/**
 	 * 暂停加载
 	 */
+	@Deprecated
 	void pauseTasks();
 
 	/**
 	 * 重新加载
 	 */
+	@Deprecated
 	void resumeTasks();
 
 }

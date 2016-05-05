@@ -15,5 +15,5 @@ public interface AsyncTaskSuccessCallback<T> {
 	 * @param result
 	 *            处理结果
 	 */
-	public void successCallback(Result<T> result);
+	void successCallback(Result<T> result);
 }
