@@ -1,11 +1,11 @@
 package com.xuan.bigapple.lib.utils;
 
+import android.text.TextUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import android.text.TextUtils;
 
 /**
  * 字符串工具类
@@ -26,23 +26,23 @@ public abstract class StringUtils {
 	 * @return
 	 */
 	public static boolean equals(CharSequence cs1, CharSequence cs2) {
-		return cs1 == null ? cs2 == null : cs1.equals(cs2);
+		return null == cs1 ? null == cs2 : cs1.equals(cs2);
 	}
 
 	/**
 	 * trim并过滤null到空串
 	 * 
-	 * @param str
+	 * @param str,如果是null,就返回"",保证不会返回null
 	 * @return
 	 */
 	public static String trimToEmpty(String str) {
-		return str == null ? EMPTY : str.trim();
+		return null == str ? EMPTY : str.trim();
 	}
 
 	// ///////////////////////////////////////////////////join和split方法///////////////////////////////////////////////
 	/**
 	 * join数组
-	 * 
+	 *
 	 * @param array
 	 * @param separator
 	 * @return
@@ -51,7 +51,6 @@ public abstract class StringUtils {
 		if (null == array) {
 			return null;
 		}
-
 		return join(array, separator, 0, array.length - 1);
 	}
 
@@ -285,7 +284,6 @@ public abstract class StringUtils {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 

@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.util.Log;
 
 import com.xuan.bigapple.lib.bitmap.core.utils.BitmapDecoder;
 import com.xuan.bigapple.lib.utils.log.LogUtils;
@@ -29,6 +30,7 @@ import java.io.OutputStream;
  * @version $Revision: 1.0 $, $Date: 2014-7-10 下午7:03:59 $
  */
 public abstract class BitmapUtils {
+	private static final String TAG = "BP.BitmapUtils";
 
 	/**
 	 * 重新绘制一个bitmap，这个bitmap是原有图片的圆角，圆角是图片宽的一半
@@ -39,7 +41,7 @@ public abstract class BitmapUtils {
 	 */
 	public static Bitmap getRoundedCornerBitmap(Bitmap sourceBitmap) {
 		if (null == sourceBitmap) {
-			LogUtils.e("SourceBitmap is null.");
+			Log.e(TAG, "SourceBitmap is null.");
 			return null;
 		}
 
@@ -58,7 +60,7 @@ public abstract class BitmapUtils {
 	public static Bitmap getRoundedCornerBitmap(Bitmap sourceBitmap,
 			float roundPx) {
 		if (null == sourceBitmap) {
-			LogUtils.e("SourceBitmap is null.");
+			Log.e(TAG, "SourceBitmap is null.");
 			return null;
 		}
 
@@ -83,7 +85,7 @@ public abstract class BitmapUtils {
 
 			return roundedBitmap;
 		} catch (Exception e) {
-			LogUtils.e(e.getMessage(), e);
+			Log.e(TAG, e.getMessage(), e);
 			return null;
 		}
 	}
@@ -111,7 +113,7 @@ public abstract class BitmapUtils {
 			bitmap = BitmapDecoder.decodeSampledBitmapFromFile(src, minWidth,
 					minHeight, Config.ARGB_8888);
 			if (null == bitmap) {
-				LogUtils.e("Change Failed. Cause bitmap from decode is null.");
+				Log.e(TAG, "Change Failed. Cause bitmap from decode is null.");
 				return null;
 			}
 
@@ -126,7 +128,7 @@ public abstract class BitmapUtils {
 			out = new BufferedOutputStream(new FileOutputStream(file));
 			newBitmap.compress(CompressFormat.JPEG, 70, out);// 保存到目的地
 		} catch (Exception e) {
-			LogUtils.e(e.getMessage(), e);
+			Log.e(TAG, e.getMessage(), e);
 			return null;
 		} finally {
 			try {
@@ -138,7 +140,6 @@ public abstract class BitmapUtils {
 				// Ignore
 			}
 		}
-
 		return newBitmap;
 	}
 

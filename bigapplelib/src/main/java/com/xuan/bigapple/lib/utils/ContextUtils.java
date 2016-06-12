@@ -8,12 +8,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.xuan.bigapple.lib.Bigapple;
-import com.xuan.bigapple.lib.utils.log.LogUtils;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ import java.util.List;
  * @version $Revision: 1.0 $, $Date: 2013-3-25 上午9:22:02 $
  */
 public abstract class ContextUtils {
+	private static final String TAG = "BP.ContextUtils";
 
 	/**
 	 * 判断是否存在网络连接
@@ -169,15 +170,14 @@ public abstract class ContextUtils {
 				 * BACKGROUND=400 EMPTY=500 FOREGROUND=100 GONE=1000
 				 * PERCEPTIBLE=130 SERVICE=300 ISIBLE=200
 				 */
-				LogUtils.i("此appimportace =" + appProcess.importance
+				Log.i(TAG, "此appimportace =" + appProcess.importance
 						+ ",context.getClass().getName()="
 						+ Bigapple.getApplicationContext().getClass().getName());
-
 				if (appProcess.importance != RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-					LogUtils.i("处于后台" + appProcess.processName);
+					Log.i(TAG, "处于后台" + appProcess.processName);
 					return true;
 				} else {
-					LogUtils.i("处于前台" + appProcess.processName);
+					Log.i(TAG, "处于前台" + appProcess.processName);
 					return false;
 				}
 			}

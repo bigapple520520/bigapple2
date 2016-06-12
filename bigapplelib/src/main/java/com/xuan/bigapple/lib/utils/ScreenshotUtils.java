@@ -1,14 +1,14 @@
 package com.xuan.bigapple.lib.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
 import com.xuan.bigapple.lib.io.IOUtils;
-import com.xuan.bigapple.lib.utils.log.LogUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * 截屏工具
@@ -16,16 +16,17 @@ import com.xuan.bigapple.lib.utils.log.LogUtils;
  * @author xuan
  */
 public abstract class ScreenshotUtils {
+	private static final String TAG = "BP.ScreenshotUtils";
 
 	/**
-	 * View保存成图片
-	 * 
+	 * 保存View到图片
+	 *
 	 * @param view
 	 * @param saveFileName
-	 *            截屏后文件保存路劲
+	 * @param config
 	 * @return
 	 */
-	public static Bitmap shotView(View view, String saveFileName) {
+	public static Bitmap shotView(View view, String saveFileName, Config config) {
 		view.setDrawingCacheEnabled(true);
 		Bitmap bitmap = view.getDrawingCache();
 
@@ -40,16 +41,28 @@ public abstract class ScreenshotUtils {
 			FileOutputStream fos = null;
 			try {
 				fos = new FileOutputStream(file);
-				bitmap.compress(Bitmap.CompressFormat.PNG, 70, fos);
+				bitmap.compress(config.getFormt(), config.getQuality(), fos);
 				fos.flush();
 			} catch (Exception e) {
-				LogUtils.e(e.getMessage(), e);
+				Log.e(TAG, e.getMessage(), e);
 			} finally {
 				IOUtils.closeQuietly(fos);
 			}
 		}
 
 		return bitmap;
+	}
+
+	/**
+	 * View保存成图片
+	 * 
+	 * @param view
+	 * @param saveFileName
+	 *            截屏后文件保存路劲
+	 * @return
+	 */
+	public static Bitmap shotView(View view, String saveFileName) {
+		return shotView(view, saveFileName, new Config());
 	}
 
 	/**
@@ -61,9 +74,29 @@ public abstract class ScreenshotUtils {
 	 * @return
 	 */
 	public static Bitmap shotScreen(Activity activity, String saveFileName) {
-		// 获取屏幕
 		View decorview = activity.getWindow().getDecorView();
 		return shotView(decorview, saveFileName);
+	}
+
+	public static class Config{
+		private int quality = 70;
+		private Bitmap.CompressFormat formt = Bitmap.CompressFormat.PNG;
+
+		public Bitmap.CompressFormat getFormt() {
+			return formt;
+		}
+
+		public void setFormt(Bitmap.CompressFormat formt) {
+			this.formt = formt;
+		}
+
+		public int getQuality() {
+			return quality;
+		}
+
+		public void setQuality(int quality) {
+			this.quality = quality;
+		}
 	}
 
 }

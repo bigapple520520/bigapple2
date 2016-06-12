@@ -1,12 +1,12 @@
 package com.xuan.bigapple.lib.utils;
 
-import java.util.List;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 
 import com.xuan.bigapple.lib.Bigapple;
+
+import java.util.List;
 
 /**
  * 服务工具类

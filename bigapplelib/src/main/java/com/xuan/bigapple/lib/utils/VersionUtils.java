@@ -2,6 +2,7 @@ package com.xuan.bigapple.lib.utils;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.Log;
 
 import com.xuan.bigapple.lib.Bigapple;
 
@@ -12,6 +13,7 @@ import com.xuan.bigapple.lib.Bigapple;
  * @version $Revision: 1.0 $, $Date: 2013-5-4 下午1:54:56 $
  */
 public abstract class VersionUtils {
+	private static final String TAG = "Bigapple.VersionUtils";
 
 	/**
 	 * 得到版本代码versionCode（配在AndroidManifest.xml中），主版本号，用于升级应用<br>
@@ -30,7 +32,7 @@ public abstract class VersionUtils {
 							0);
 			versionCode = packageInfo.versionCode;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage(), e);
 		}
 
 		return versionCode;
@@ -53,7 +55,7 @@ public abstract class VersionUtils {
 							0);
 			versionName = packageInfo.versionName;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage(), e);
 		}
 		return versionName;
 	}
@@ -74,7 +76,7 @@ public abstract class VersionUtils {
 							0);
 			return packageInfo.applicationInfo.icon;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage(), e);
 		}
 
 		return -1;

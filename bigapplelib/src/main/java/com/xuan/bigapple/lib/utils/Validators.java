@@ -178,28 +178,31 @@ public abstract class Validators {
 	 *            字符串
 	 * @return 如果是移动号码，返回 <code>true</code>，否则返回 <code>false</code>。
 	 */
+	@Deprecated
 	public static boolean isChinaMobile(String str) {
 		return isRegexMatch(str, REGEX_CHINA_MOBILE);
 	}
 
 	/**
-	 * 是否为中国联通手机号码。
+	 * 是否为中国联通手机号码。(号段变动可能导致不准)
 	 * 
 	 * @param str
 	 *            字符串
 	 * @return 如果是联通号码，返回 <code>true</code>，否则返回 <code>false</code>。
 	 */
+	@Deprecated
 	public static boolean isChinaUnicom(String str) {
 		return isRegexMatch(str, REGEX_CHINA_UNICOM);
 	}
 
 	/**
-	 * 是否为手机号码, 包括移动, 联通等手机号码.
+	 * 是否为手机号码, 包括移动, 联通等手机号码.(号段变动可能导致不准)
 	 * 
 	 * @param str
 	 *            字符串
 	 * @return 若是合法的手机号码返回 <code>true</code>, 否则返回 <code>false</code>.
 	 */
+	@Deprecated
 	public static boolean isMobile(String str) {
 		return isChinaMobile(str) || isChinaUnicom(str);
 	}
@@ -291,7 +294,7 @@ public abstract class Validators {
 	}
 
 	/**
-	 * 判断是否是合法的邮编
+	 * 判断是否是合法的邮编(格式:6位且是数字)
 	 * 
 	 * @param str
 	 *            字符串
@@ -380,7 +383,7 @@ public abstract class Validators {
 	 * @return true/false
 	 */
 	public static boolean isRegexMatch(String str, String regex) {
-		return str != null && str.matches(regex);
+		return null != str && str.matches(regex);
 	}
 
 }
