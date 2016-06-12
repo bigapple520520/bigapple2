@@ -75,11 +75,6 @@ public class BitmapCache {
 				globalConfig.getMemoryCacheSize()) {
 			@Override
 			protected int sizeOf(String key, Bitmap bitmap) {
-				if (null == bitmap) {
-					LogUtils.d("bitmap is null.");
-					return 0;
-				}
-
 				return BitmapCommonUtils.getBitmapSize(bitmap);
 			}
 		};
@@ -107,7 +102,6 @@ public class BitmapCache {
 				long diskCacheSize = globalConfig.getDiskCacheSize();
 				diskCacheSize = availableSpace > diskCacheSize ? diskCacheSize
 						: availableSpace;
-
 				try {
 					mDiskLruCache = LruDiskCache.open(diskCacheDir, 1, 1,
 							diskCacheSize);
@@ -131,7 +125,7 @@ public class BitmapCache {
 	 *            缓存大小。单位：字节
 	 */
 	public BitmapCache setMemoryCacheSize(int maxSize) {
-		if (mMemoryCache != null) {
+		if (null != mMemoryCache) {
 			mMemoryCache.setMaxSize(maxSize);
 		}
 		return this;
@@ -175,6 +169,7 @@ public class BitmapCache {
 							mDiskCacheLock.wait();
 						} catch (InterruptedException e) {
 							// 被中断可继续往下操作
+							//Ignore
 						}
 					}
 
@@ -189,7 +184,6 @@ public class BitmapCache {
 								outputStream = editor
 										.newOutputStream(DISK_CACHE_INDEX);
 								bitmapMeta.expiryTimestamp =
-
 								globalConfig.getDownloaderListener()
 										.downloadToStream(uri, outputStream,
 												config.getDownloaderCallBack());
@@ -213,8 +207,8 @@ public class BitmapCache {
 			}
 
 			/* 如果磁盘缓存没有开启，图片就直接下载到内存中，直接下载到内存中这样其实很危险的 */
-			if (!globalConfig.isDiskCacheEnabled() || mDiskLruCache == null
-					|| bitmapMeta.inputStream == null) {
+			if (!globalConfig.isDiskCacheEnabled() || null == mDiskLruCache
+					|| null == bitmapMeta.inputStream) {
 				outputStream = new ByteArrayOutputStream();
 				bitmapMeta.expiryTimestamp = globalConfig
 						.getDownloaderListener().downloadToStream(uri,
@@ -255,13 +249,13 @@ public class BitmapCache {
 	private Bitmap addBitmapToMemoryCache(String cacheKey,
 			BitmapDisplayConfig config, BitmapMeta bitmapMeta)
 			throws IOException {
-		if (cacheKey == null || bitmapMeta == null) {
+		if (null == cacheKey || null == bitmapMeta) {
 			return null;
 		}
 
 		Bitmap bitmap = null;
 		try {
-			if (bitmapMeta.inputStream != null) {
+			if (null != bitmapMeta.inputStream) {
 				/* 表示开启了磁盘缓存，然后网络上的图片直接下载到了本地磁盘，故这里保存的是输入流 */
 				if (config.isShowOriginal()) {
 					bitmap = BitmapFactory
@@ -315,7 +309,6 @@ public class BitmapCache {
 				uri2keyListMap.put(cacheKey, keyList);
 			}
 			keyList.add(key);
-
 			mMemoryCache.put(key, bitmap, bitmapMeta.expiryTimestamp);
 		}
 
@@ -332,9 +325,10 @@ public class BitmapCache {
 	 * @return
 	 */
 	public Bitmap getBitmapFromMemCache(String uri, BitmapDisplayConfig config) {
-		String key = uri + config.toString();
-		if (mMemoryCache != null) {
-			Bitmap bitmap = mMemoryCache.get(key);
+		String key = globalConfig.getMakeCacheKeyListener().makeCacheKey(uri);
+		String memCacheKey = key + config.toString();
+		if (null != mMemoryCache) {
+			Bitmap bitmap = mMemoryCache.get(memCacheKey);
 			return null == bitmap ? null : bitmap;
 		}
 		return null;
@@ -354,6 +348,7 @@ public class BitmapCache {
 			return null;
 		}
 
+		String key = globalConfig.getMakeCacheKeyListener().makeCacheKey(uri);
 		synchronized (mDiskCacheLock) {
 			while (!isDiskCacheReadied) {
 				try {
@@ -365,7 +360,7 @@ public class BitmapCache {
 			if (mDiskLruCache != null) {
 				LruDiskCache.Snapshot snapshot = null;
 				try {
-					snapshot = mDiskLruCache.get(uri);
+					snapshot = mDiskLruCache.get(key);
 					if (snapshot != null) {
 
 						Bitmap bitmap = null;
@@ -402,11 +397,11 @@ public class BitmapCache {
 						}
 
 						/* 如果开启了内存缓存，读到磁盘图片时缓存到内存 */
-						String key = uri + config.toString();
+						String memCachekey = key + config.toString();
 						if (globalConfig.isMemoryCacheEnabled()
 								&& null != mMemoryCache) {
 							mMemoryCache.put(key, bitmap,
-									mDiskLruCache.getExpiryTimestamp(uri));
+									mDiskLruCache.getExpiryTimestamp(memCachekey));
 						}
 
 						return bitmap;
@@ -434,7 +429,7 @@ public class BitmapCache {
 	 * 清理所有内存缓存
 	 */
 	public void clearMemoryCache() {
-		if (mMemoryCache != null) {
+		if (null != mMemoryCache) {
 			mMemoryCache.evictAll();
 			uri2keyListMap.clear();
 		}
@@ -445,7 +440,7 @@ public class BitmapCache {
 	 */
 	public void clearDiskCache() {
 		synchronized (mDiskCacheLock) {
-			if (mDiskLruCache != null && !mDiskLruCache.isClosed()) {
+			if (null != mDiskLruCache && !mDiskLruCache.isClosed()) {
 				try {
 					mDiskLruCache.delete();
 				} catch (IOException e) {
@@ -476,7 +471,8 @@ public class BitmapCache {
 	 *            缓存的图片地址
 	 */
 	public void clearMemoryCache(String uri) {
-		ArrayList<String> keyList = uri2keyListMap.get(uri);
+		String key = globalConfig.getMakeCacheKeyListener().makeCacheKey(uri);
+		ArrayList<String> keyList = uri2keyListMap.get(key);
 		if (Validators.isEmpty(keyList)) {
 			return;
 		}
@@ -486,10 +482,10 @@ public class BitmapCache {
 		}
 
 		// 遍历删除该地址下的所有缓存
-		for (String key : keyList) {
-			mMemoryCache.remove(key);
+		for (String memCacheKey : keyList) {
+			mMemoryCache.remove(memCacheKey);
 		}
-		uri2keyListMap.remove(uri);
+		uri2keyListMap.remove(key);
 	}
 
 	/**
@@ -499,12 +495,13 @@ public class BitmapCache {
 	 *            缓存的图片地址
 	 */
 	public void clearDiskCache(String uri) {
+		String key = globalConfig.getMakeCacheKeyListener().makeCacheKey(uri);
 		synchronized (mDiskCacheLock) {
 			if (mDiskLruCache != null && !mDiskLruCache.isClosed()) {
 				try {
-					mDiskLruCache.remove(uri);
+					mDiskLruCache.remove(key);
 				} catch (IOException e) {
-					LogUtils.e("清理[" + uri + "]磁盘缓存IO异常，原因：" + e.getMessage(),
+					LogUtils.e("清理[" + key + "]磁盘缓存IO异常，原因：" + e.getMessage(),
 							e);
 				}
 			}
@@ -514,9 +511,9 @@ public class BitmapCache {
 	/**
 	 * flush磁盘缓存
 	 */
-	public void flush() {
+	public void flushDiskCache() {
 		synchronized (mDiskCacheLock) {
-			if (mDiskLruCache != null) {
+			if (null != mDiskLruCache) {
 				try {
 					mDiskLruCache.flush();
 				} catch (IOException e) {
@@ -529,9 +526,9 @@ public class BitmapCache {
 	/**
 	 * 关闭内存缓存和磁盘缓存，关闭后，缓存要重新初始化，否则不可用
 	 */
-	public void close() {
+	public void closeDiskCache() {
 		synchronized (mDiskCacheLock) {
-			if (mDiskLruCache != null) {
+			if (null != mDiskLruCache) {
 				try {
 					if (!mDiskLruCache.isClosed()) {
 						mDiskLruCache.close();

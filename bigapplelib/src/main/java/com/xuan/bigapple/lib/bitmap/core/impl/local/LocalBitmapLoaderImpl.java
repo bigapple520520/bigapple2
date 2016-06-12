@@ -1,7 +1,5 @@
 package com.xuan.bigapple.lib.bitmap.core.impl.local;
 
-import java.lang.ref.WeakReference;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -21,6 +19,8 @@ import com.xuan.bigapple.lib.bitmap.core.utils.BitmapDecoder;
 import com.xuan.bigapple.lib.bitmap.listeners.ClearCacheListener;
 import com.xuan.bigapple.lib.utils.Validators;
 import com.xuan.bigapple.lib.utils.log.LogUtils;
+
+import java.lang.ref.WeakReference;
 
 /**
  * 本地图片加载器
@@ -356,6 +356,11 @@ public class LocalBitmapLoaderImpl implements IBitmapLoader {
 		if (null != cache) {
 			cache.remove(key);
 		}
+	}
+
+	@Override
+	public double getDistCacheSize() {
+		return 0;
 	}
 
 }

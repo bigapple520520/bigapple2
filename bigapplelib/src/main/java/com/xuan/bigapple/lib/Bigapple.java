@@ -25,7 +25,6 @@ public abstract class Bigapple {
 			LogUtils.e("Bigapple can not init. Cause context is null.");
 			return;
 		}
-
 		if (application instanceof Activity) {
 			LogUtils.d("Bigapple init by Activity.");
 			application = context.getApplicationContext();

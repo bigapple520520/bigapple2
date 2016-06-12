@@ -33,7 +33,7 @@ public class LocalBitmapLoader implements IBitmapLoader {
 	public static LocalBitmapLoader getInstance() {
 		if (null == instance) {
 			throw new NullPointerException(
-					"Instance is null. Call LocalBitmapLoader.init(application) first.");
+					"Instance is null. Call LocalBitmapLoader.init first.");
 		}
 
 		return instance;
@@ -131,6 +131,11 @@ public class LocalBitmapLoader implements IBitmapLoader {
 	@Override
 	public void closeCache(ClearCacheListener callback) {
 		localBitmapLoaderImpl.closeCache(callback);
+	}
+
+	@Override
+	public double getDistCacheSize() {
+		return 0;
 	}
 
 	@Override

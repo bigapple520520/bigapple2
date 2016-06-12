@@ -23,34 +23,30 @@ import java.util.concurrent.ThreadFactory;
  * @version $Revision: 1.0 $, $Date: 2013-8-1 下午4:24:49 $
  */
 public class BitmapGlobalConfig {
-	/** 磁盘缓存地址 */
-	private String diskCachePath;
-
 	/** 最小内存缓存阀值：2M */
 	public final static int MIN_MEMORY_CACHE_SIZE = 1024 * 1024 * 2;
-	/** 内存缓存大小：默认8M */
-	private int memoryCacheSize = 1024 * 1024 * 8;
-
 	/** 最小磁盘缓存阀值：10M */
 	public final static int MIN_DISK_CACHE_SIZE = 1024 * 1024 * 10;
+
+	/** 磁盘缓存地址 */
+	private String diskCachePath;
+	/** 内存缓存大小：默认8M */
+	private int memoryCacheSize = 1024 * 1024 * 8;
 	/** 磁盘缓存大小：默认50M */
 	private int diskCacheSize = 1024 * 1024 * 50;
-
 	/** 是否开启内存缓存 */
 	private boolean memoryCacheEnabled = true;
 	/** 是否开启磁盘缓存 */
 	private boolean diskCacheEnabled = true;
+	/** 处理线程数 */
+	private int threadPoolSize = 5;
 
 	/** 图片缓存 */
 	private BitmapCache bitmapCache;
-
-	/** 处理线程数 */
-	private int threadPoolSize = 5;
 	/** 标记是否需要重新初始化线程池 */
 	private boolean _dirty_params_bitmapLoadExecutor = true;
 	/** 线程池 */
 	private ExecutorService bitmapLoadExecutor;
-
 	/** 上下文 */
 	private final Context application;
 
@@ -61,11 +57,9 @@ public class BitmapGlobalConfig {
 
 	public BitmapGlobalConfig(Context application) {
 		this.application = application;
-		// 初始化缓存
 		initBitmapCache();
 	}
 
-	/** 初始化缓存 */
 	private void initBitmapCache() {
 		BitmapCacheManager bitmapCacheManager = BitmapCacheManager
 				.getInstance(getBitmapCache());

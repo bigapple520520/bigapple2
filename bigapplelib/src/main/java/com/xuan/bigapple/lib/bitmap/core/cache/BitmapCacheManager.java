@@ -72,11 +72,11 @@ public class BitmapCacheManager {
 					break;
 				case MESSAGE_FLUSH:
 					bitmapCache.clearMemoryCache();
-					bitmapCache.flush();
+					bitmapCache.flushDiskCache();
 					break;
 				case MESSAGE_CLOSE:
 					bitmapCache.clearMemoryCache();
-					bitmapCache.close();
+					bitmapCache.closeDiskCache();
 				case MESSAGE_CLEAR:
 					bitmapCache.clearCache();
 					break;

@@ -31,7 +31,8 @@ public class BitmapDisplayConfig {
 	private Bitmap loadingBitmap = Bitmap.createBitmap(50, 50,
 			Bitmap.Config.ARGB_8888);
 	/** 加载失败图片 */
-	private Bitmap loadFailedBitmap;
+	private Bitmap loadFailedBitmap = Bitmap.createBitmap(50, 50,
+			Bitmap.Config.ARGB_8888);
 
 	/** 加载完成后回调 */
 	private DisplayImageListener displayImageListener;

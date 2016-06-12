@@ -1,8 +1,8 @@
 package com.xuan.bigapple.lib.utils;
 
-import java.util.HashMap;
-
 import android.os.Build.VERSION;
+
+import java.util.HashMap;
 
 /**
  * SDK版本判断
@@ -35,6 +35,10 @@ public abstract class SdkVersionUtils {
 
 	public static final int SDK44_API19 = 19;// KitKat
 
+	public static final int SDK50_API21 = 21;// Lollipop
+	public static final int SDK50_API22 = 22;// Lollipop
+	public static final int SDK60_API23 = 23;// Marshmallow
+
 	private static HashMap<Integer, String> sdkInt2DescriptionMap = new HashMap<Integer, String>();
 	static {
 		sdkInt2DescriptionMap.put(SDK10_API1, "BASE");
@@ -60,6 +64,10 @@ public abstract class SdkVersionUtils {
 		sdkInt2DescriptionMap.put(SDK43_API18, "JELLY_BEAN_MR2");
 
 		sdkInt2DescriptionMap.put(SDK44_API19, "KitKat");
+
+		sdkInt2DescriptionMap.put(SDK50_API21, "Lollipop");
+		sdkInt2DescriptionMap.put(SDK50_API22, "Lollipop");
+		sdkInt2DescriptionMap.put(SDK60_API23, "Marshmallow");
 	}
 
 	/**

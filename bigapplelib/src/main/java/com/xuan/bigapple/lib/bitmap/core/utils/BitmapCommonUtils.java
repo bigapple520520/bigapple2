@@ -35,6 +35,29 @@ public class BitmapCommonUtils {
 	}
 
 	/**
+	 * 获取对应文件夹下所有文件的大小,单位:Byte
+	 *
+	 * @param filePath
+	 * @return
+	 */
+	public static double getDirUsageCapacity(String filePath){
+		File file = new File(filePath);
+		if(!file.exists()){
+			return 0;
+		}
+
+		if(file.isDirectory()){
+			double size = 0;
+			for(File f : file.listFiles()){
+				size += getDirUsageCapacity(f.getPath());
+			}
+			return size;
+		}else{
+			return file.length();
+		}
+	}
+
+	/**
 	 * 获取bitmap的字节大小
 	 * 
 	 * @param bitmap

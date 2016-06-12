@@ -91,6 +91,11 @@ public interface IBitmapLoader {
 	void closeCache(ClearCacheListener callback);
 
 	/**
+	 * 获取磁盘缓存占用空间,单位Byte
+	 */
+	double getDistCacheSize();
+
+	/**
 	 * 暂停加载
 	 */
 	@Deprecated

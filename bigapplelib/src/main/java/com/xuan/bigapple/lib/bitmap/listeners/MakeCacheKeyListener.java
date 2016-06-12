@@ -12,5 +12,5 @@ public interface MakeCacheKeyListener {
 	 * @param url
 	 * @return
 	 */
-	public String makeCacheKey(String url);
+	String makeCacheKey(String url);
 }

@@ -168,4 +168,9 @@ public class BPBitmapLoader implements IBitmapLoader {
 		LogUtils.e("Not support!!!");
 	}
 
+	@Override
+	public double getDistCacheSize() {
+		return NetBitmapLoader.getInstance().getDistCacheSize();
+	}
+
 }

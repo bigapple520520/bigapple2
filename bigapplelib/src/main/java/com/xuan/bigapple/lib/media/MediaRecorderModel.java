@@ -258,7 +258,7 @@ public class MediaRecorderModel {
 	 * 
 	 * @author xuan
 	 */
-	public static interface OnRecordListener {
+	public interface OnRecordListener {
 		/**
 		 * 录音开始
 		 */

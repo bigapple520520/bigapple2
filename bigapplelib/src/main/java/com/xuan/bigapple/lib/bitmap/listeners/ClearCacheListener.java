@@ -15,6 +15,6 @@ public interface ClearCacheListener {
 	 * @param key
 	 *            执行了哪个key的缓存
 	 */
-	public void afterClearCache(int type, String key);
+	 void afterClearCache(int type, String key);
 
 }

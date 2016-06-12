@@ -13,6 +13,7 @@ import com.xuan.bigapple.lib.bitmap.BitmapDisplayConfig;
 import com.xuan.bigapple.lib.bitmap.BitmapGlobalConfig;
 import com.xuan.bigapple.lib.bitmap.core.cache.BitmapCacheManager;
 import com.xuan.bigapple.lib.bitmap.core.impl.IBitmapLoader;
+import com.xuan.bigapple.lib.bitmap.core.utils.BitmapCommonUtils;
 import com.xuan.bigapple.lib.bitmap.listeners.ClearCacheListener;
 import com.xuan.bigapple.lib.utils.log.LogUtils;
 
@@ -355,6 +356,11 @@ public class NetBitmapLoaderImpl implements IBitmapLoader {
 		synchronized (pauseTaskLock) {
 			pauseTaskLock.notifyAll();
 		}
+	}
+
+	@Override
+	public double getDistCacheSize() {
+		return BitmapCommonUtils.getDirUsageCapacity(defaultBitmapGlobalConfig.getDiskCachePath());
 	}
 
 	// ///////////////////////////////判断获取ImageView的下载任务///////////////////////////////////////////////////////

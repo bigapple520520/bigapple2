@@ -147,4 +147,8 @@ public class NetBitmapLoader implements IBitmapLoader {
 		netBitmapLoaderImpl.resumeTasks();
 	}
 
+	@Override
+	public double getDistCacheSize() {
+		return netBitmapLoaderImpl.getDistCacheSize();
+	}
 }
