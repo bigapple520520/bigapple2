@@ -194,7 +194,8 @@ public class BPHttpUrlConnectionClient implements BPHttpClient {
         DataOutputStream dos = null;
         try {
             dos = new DataOutputStream(conn.getOutputStream());
-            dos.writeBytes(bodyJson);
+            //dos.writeBytes(bodyJson);
+            dos.write(bodyJson.getBytes());
         }catch (Exception e){
             Log.e(TAG, e.getMessage(), e);
         }finally {
@@ -218,7 +219,8 @@ public class BPHttpUrlConnectionClient implements BPHttpClient {
         DataOutputStream dos = null;
         try {
             dos = new DataOutputStream(conn.getOutputStream());
-            dos.writeBytes(paramStr);
+            //dos.writeBytes(paramStr);
+            dos.write(paramStr.getBytes());
         }catch (Exception e){
             Log.e(TAG, e.getMessage(), e);
         }finally {

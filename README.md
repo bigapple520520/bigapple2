@@ -41,3 +41,4 @@ db部分是对sqlite数据操作的半自动化封装。方便sql语法的升级
 * [ V2.0.1 ]（1）重构HTTP模块
 * [ V2.0.2 ]（1）依赖调整,只依赖:com.jopool:support-v4:1.0
 * [ V2.0.3 ]（1）依赖调整,只依赖:compile 'com.android.support:support-v4:22.2.1'
+* [ V2.0.4 ]（1）修复HTTP的POST乱码问题
